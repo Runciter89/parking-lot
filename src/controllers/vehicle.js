@@ -1,6 +1,6 @@
 const vehicle = {}
 //imports
-var Vehicles = require('../Models/Vehicles');
+var Vehicles = require('../models/Vehicles');
 const { VEHICLE_TYPE } = require('../shared/constants').enums
 
 

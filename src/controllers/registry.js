@@ -1,13 +1,18 @@
 const controller = {}
 
 //imports
-var Vehicles = require('../Models/Vehicles');
-var Register = require('../Models/ParkingLot');
+var Vehicles = require('../models/Vehicles');
+var Register = require('../models/ParkingLot');
 const { VEHICLE_TYPE } = require('../shared/constants').enums
 var fs = require('fs');
 
-//register
-controller.register = async (req, res) => {
+/**
+ * esta funcion hace una cosa rara
+ * @paesram {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+controller.entry = async (req, res) => {
   try {
     const { number_plate } = req.body;
 
@@ -52,7 +57,11 @@ controller.register = async (req, res) => {
   }
 }
 
-//comienza mes
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 controller.startMonth = async (req, res) => {
   try {
     const response = await Register.findAll({})
@@ -160,7 +169,7 @@ async function nonresident(data) {
 }
 
 
-controller.registerExit = async (req, res) => {
+controller.exit = async (req, res) => {
   try {
 
     const { number_plate } = req.body;
@@ -197,42 +206,6 @@ controller.registerExit = async (req, res) => {
   }
 }
 
-//pago Residentes
-controller.pago = async (req, res) => {
-  let data = null;
-  let tax = null;
-
-  try {
-    const { fileName } = req.body;
-
-    const response = await Vehicles.findAll({
-      where: { vehicle_type: VEHICLE_TYPE.RESIDENT }
-
-    })
-
-    response.forEach(vehicle => {
-      tax = vehicle.monthly * 0.05;
-      data = [vehicle.numberPlate, vehicle.monthly, tax]
-
-      fs.appendFile(`src/Files/${fileName}`, data.toString(), (err) => {
-        if (err) {
-          throw err;
-        }
-        console.log("file updated")
-      });
-
-    })
-
-
-
-    res.json({ success: true, data: response });
-
-  } catch (e) {
-    console.log(e);
-    res.json({ success: false, error: e });
-  }
-}
-
 //registers list
 controller.list = async (req, res) => {
   try {
@@ -248,8 +221,12 @@ controller.list = async (req, res) => {
   }
 }
 
-//get register by numberPlate
-controller.get = async (req, res) => {
+/**
+ * get register by numberPlate
+ * @param {*} req 
+ * @param {*} res 
+ */
+controller.findOne = async (req, res) => {
   try {
     const { number_plate } = req.params;
 
