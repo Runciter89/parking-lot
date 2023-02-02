@@ -17,7 +17,6 @@ controller.signup = async (params) => {
     })
     debug('existinUser', existinUser)
     if (existinUser) {
-      console.log("User Alredy Exist")
       throw new Error("User Alredy Exist")
     }
 
@@ -33,15 +32,14 @@ controller.signup = async (params) => {
     debug('createdUser', result)
 
 
-    const token = jwt.sign({ Id: result.id, email: result.email },
-      process.env.API_SECRET,
+    const token = jwt.sign({ id: result.id, email: result.email },
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRATION }
     );
     delete result.dataValues.password
     return { user: result, token };
   }
   catch (e) {
-    console.log(e);
     throw e;
   }
 }
@@ -64,17 +62,17 @@ controller.signin = async (params) => {
       throw new Error("Wrong Password")
     }
 
-    const token = jwt.sign({ Id: existinUser.id, email: existinUser.email },
-      process.env.API_SECRET,
+    const token = jwt.sign({ id: existinUser.id, email: existinUser.email },
+      process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRATION }
     );
     delete existinUser.dataValues.password
     return { user: existinUser, token: token };
   }
   catch (e) {
-    console.log(e);
     throw e;
   }
 }
+
 
 module.exports = controller;

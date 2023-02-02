@@ -8,7 +8,6 @@ controller.list = async () => {
     const response = await User.findAll()
     return response;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 }
@@ -23,7 +22,6 @@ controller.get = async (id) => {
     return response
 
   } catch (e) {
-    console.log(e);
     throw e;
   }
 }
@@ -37,7 +35,6 @@ controller.delete = async (id) => {
     return response;
 
   } catch (e) {
-    console.log(e);
     throw e;
   }
 }
@@ -56,7 +53,6 @@ controller.update = async (id, data) => {
     })
     return response;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 }

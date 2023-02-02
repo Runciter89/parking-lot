@@ -48,7 +48,6 @@ controller.makResidentReport = async (param) => {
 
     return response
   } catch (e) {
-    console.log(e);
     throw e
   }
 }

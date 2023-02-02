@@ -9,7 +9,7 @@ handler.handleMakResidentReport = async (req, res) => {
     res.json({ success: true, data: result });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e.message });
   }
 }

@@ -11,7 +11,7 @@ handler.handleCreateOfficial = async (req, res) => {
     res.json({ success: true, data: result });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -22,7 +22,7 @@ handler.handleCreateResident = async (req, res) => {
     const result = await controller.createResident(req.body)
     res.json({ success: true, data: result });
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -33,7 +33,7 @@ handler.list = async (req, res) => {
     const result = await Vehicle.findAll()
     res.json({ success: true, data: result });
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -50,7 +50,7 @@ handler.get = async (req, res) => {
     res.json({ success: true, data: result });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -65,7 +65,7 @@ handler.delete = async (req, res) => {
     res.json({ success: true, data: result });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -78,7 +78,7 @@ handler.update = async (req, res) => {
     res.json({ success: true, data: result });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }

@@ -11,14 +11,13 @@ const dateDiff = (dt2, dt1) => {
 }
 
 const computeStay = (register) => {
-  console.log('computeStay', register.exited_at, register.entered_at)
+  debug('computeStay', register.exited_at, register.entered_at)
   const diff = dateDiff(register.exited_at, register.entered_at);
-  console.log('raw diff', diff)
-
+  debug('raw diff', diff)
 
   const minutes = Math.abs(Math.floor(diff / (1000 * 60)));
   const result = minutes > 1 ? minutes : 1
-  console.log('diff minutes', register.exited_at, register.entered_at, result)
+  debug('diff minutes', register.exited_at, register.entered_at, result)
   return result
 }
 
@@ -49,7 +48,6 @@ controller.createEntry = async (params) => {
     ])
 
     if (openRegistries.length) {
-      console.log('bad request. this plate has an open register')
       throw new Error('bad request. this plate has an open register') //TODO: implement  fine grained error management
     }
 
@@ -75,7 +73,6 @@ controller.createEntry = async (params) => {
     return null
 
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -85,7 +82,7 @@ controller.startMonth = async () => {
     const result = await Register.findAll({})
     debug('startMonth', result)
 
-    //reset all RESIDENT vehicle monthly value to 0
+    //reset all RESIDENT vehicle monthly value to 0 and destroy all official vehicle registies
     await Promise.all([
       Vehicle.update(
         { monthly: 0 },
@@ -96,7 +93,6 @@ controller.startMonth = async () => {
 
     return null
   } catch (e) {
-    console.log(e)
     throw e
   }
 }
@@ -104,11 +100,8 @@ controller.startMonth = async () => {
 //registrar salida
 async function registerExitResident(register) {
   try {
-    console.log('***', register.numberPlate)
     register.exited_at = new Date()
     const stayMinutes = computeStay(register)
-
-    console.log(`from ${register.entered_at} to ${register.exited_at}. minutes`, stayMinutes)
 
     const [result, _] = await Promise.all([
       Vehicle.update(
@@ -128,7 +121,6 @@ async function registerExitResident(register) {
 
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -137,8 +129,6 @@ async function registerExitNonResident(register) {
   try {
     register.exited_at = new Date()
     const stayAmount = computeStayAmount(register)
-    console.log(`from ${register.entered_at} to ${register.exited_at}. amount`, stayAmount)
-
 
     const result = await Register.update(
       {
@@ -150,7 +140,6 @@ async function registerExitNonResident(register) {
 
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -168,7 +157,6 @@ async function registerExitOfficial(register) {
 
     return response
   } catch (e) {
-    console.log(e);
     throw e
   }
 
@@ -184,32 +172,25 @@ controller.createExit = async (params) => {
       where: { numberPlate: number_plate, exited_at: EXITED_AT_NULISH_VALUE }
     })
 
-    console.log('++++', register)
     if (!register) {
       throw new Error('not exist open registers for this vehicle')
     }
 
+    debug('registerExit', register.vehicle_type, register.numberPlate,)
     switch (register.vehicle_type) {
       case VEHICLE_TYPE.RESIDENT:
-        console.log(VEHICLE_TYPE.RESIDENT)
-        console.log("PLACA", register.numberPlate)
         await registerExitResident(register)
-
         break;
       case VEHICLE_TYPE.NON_RESIDENT:
-        console.log(VEHICLE_TYPE.NON_RESIDENT)
-        console.log("PLACA", register.numberPlate)
         await registerExitNonResident(register)
         break;
       default:
-        console.log("OFFICIAL")
         await registerExitOfficial(register)
         break;
     }
 
     return register
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -222,7 +203,6 @@ controller.list = async () => {
     return response
 
   } catch (e) {
-    console.log(e);
     throw e;
   }
 }
@@ -239,7 +219,6 @@ controller.findOne = async (params) => {
 
 
   } catch (e) {
-    console.log(e);
     throw e;
   }
 }
@@ -256,7 +235,6 @@ controller.delete = async (params) => {
 
     return response
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -277,7 +255,6 @@ controller.delete = async (params) => {
 //     })
 //     return response
 //   } catch (e) {
-//     console.log(e);
 //     throw e
 //   }
 // }

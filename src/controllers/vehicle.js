@@ -23,7 +23,6 @@ vehicle.createOfficial = async (data) => {
     return result
 
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -38,7 +37,6 @@ vehicle.createResident = async (data) => {
     })
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -49,7 +47,6 @@ vehicle.list = async () => {
     const result = await Vehicle.findAll()
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -63,7 +60,6 @@ vehicle.get = async (number_plate) => {
     })
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -76,7 +72,6 @@ vehicle.delete = async (number_plate) => {
     })
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }
@@ -93,7 +88,6 @@ vehicle.update = async (number_plate, data) => {
     })
     return result
   } catch (e) {
-    console.log(e);
     throw e
   }
 }

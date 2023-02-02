@@ -9,7 +9,7 @@ handler.handleCreateEntry = async (req, res) => {
     const result = await controller.createEntry(req.body)
     res.json({ success: true, data: result });
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -19,7 +19,7 @@ handler.startMonth = async (req, res) => {
     const result = await controller.startMonth()
     res.json({ success: true, data: result });
   } catch (e) {
-    console.log(e)
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -29,7 +29,7 @@ handler.handleCreateExit = async (req, res) => {
     const result = await controller.createExit(req.body)
     res.json({ success: true, data: result });
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e.message });
   }
 }
@@ -37,13 +37,10 @@ handler.handleCreateExit = async (req, res) => {
 //registers list
 handler.list = async (req, res) => {
   try {
-
     const result = await controller.list()
-
     res.json({ success: true, data: result });
-
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -61,7 +58,7 @@ handler.findOne = async (req, res) => {
     res.json({ success: true, data: result });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -78,7 +75,8 @@ handler.findOne = async (req, res) => {
 
 
 //   } catch (e) {
-//     console.log(e);
+//        console.error(e)
+
 //     throw e;
 //   }
 // }
@@ -102,7 +100,8 @@ handler.findOne = async (req, res) => {
 //     res.json({ success: true, data: result });
 
 //   } catch (e) {
-//     console.log(e);
+//    console.error(e)
+
 //     throw e;
 //   }
 // }

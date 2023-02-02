@@ -10,7 +10,7 @@ handler.list = async (req, res) => {
     response.forEach(user => { delete user.dataValues.password })
     res.json({ success: true, data: response });
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -26,7 +26,7 @@ handler.get = async (req, res) => {
     res.json({ success: true, data: response });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -41,7 +41,7 @@ handler.delete = async (req, res) => {
     res.json({ success: true, data: response });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
@@ -55,7 +55,7 @@ handler.update = async (req, res) => {
     res.json({ success: true, data: response });
 
   } catch (e) {
-    console.log(e);
+    console.error(e)
     res.json({ success: false, error: e });
   }
 }
