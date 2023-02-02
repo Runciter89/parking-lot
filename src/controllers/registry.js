@@ -1,22 +1,14 @@
 const controller = {}
 
 //imports
-var Vehicles = require('../models/Vehicles');
-var Register = require('../models/ParkingLot');
+var { Register } = require('../models').sequelizeModels;
 const { VEHICLE_TYPE } = require('../shared/constants').enums
-var fs = require('fs');
 
-/**
- * esta funcion hace una cosa rara
- * @paesram {*} req 
- * @param {*} res 
- * @returns 
- */
-controller.entry = async (req, res) => {
+controller.createEntry = async (params) => {
   try {
-    const { number_plate } = req.body;
+    const { number_plate } = params;
 
-    console.log(req.body)
+    console.log(params)
 
     const [vehicle, openRegistries] = await Promise.all([
       Vehicles.findOne({
@@ -31,7 +23,8 @@ controller.entry = async (req, res) => {
     ])
 
     if (openRegistries.length) {
-      return res.json({ success: false, error: 'bad request. this plate has an open register' })
+      console.log('bad request. this plate has an open register')
+      throw new Error('bad request. this plate has an open register') //TODO: implement  fine grained error management
     }
 
     let result = null
@@ -49,20 +42,15 @@ controller.entry = async (req, res) => {
       })
     }
 
-    res.json({ success: true, data: null });
+    return null
 
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- */
-controller.startMonth = async (req, res) => {
+controller.startMonth = async () => {
   try {
     const response = await Register.findAll({})
 
@@ -87,10 +75,10 @@ controller.startMonth = async (req, res) => {
       }
 
     });
-    res.json(response);
+    return response
   } catch (e) {
     console.log(e)
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
@@ -124,13 +112,10 @@ async function resident(data) {
     const response = await Vehicles.update({ monthly: tminutes }, { where: { numberPlate: result.numberPlate } })
 
     return response
-    res.json({ success: true, data: response });
-
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
-
 }
 
 async function nonresident(data) {
@@ -159,20 +144,17 @@ async function nonresident(data) {
     const response = await Register.update({ pay: tminutes }, { where: { id: id } })
 
     return response
-    res.json({ success: true, data: response });
-
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 
 }
 
 
-controller.exit = async (req, res) => {
+controller.createExit = async (params) => {
   try {
-
-    const { number_plate } = req.body;
+    const { number_plate } = params;
 
     const result = await Register.findOne({
       where: { numberPlate: number_plate, exited_at: "null" }
@@ -198,72 +180,64 @@ controller.exit = async (req, res) => {
         break;
     }
 
-    res.json({ success: true, data: result });
-
+    return result
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
-//registers list
-controller.list = async (req, res) => {
+
+controller.list = async () => {
   try {
     const response = await Register.findAll({
-
-
     })
-    res.json({ success: true, data: response });
+    return response
 
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e;
   }
 }
 
-/**
- * get register by numberPlate
- * @param {*} req 
- * @param {*} res 
- */
-controller.findOne = async (req, res) => {
+controller.findOne = async (params) => {
   try {
-    const { number_plate } = req.params;
+    const { number_plate } = params;
 
     const response = await Register.findAll({
       where: { numberPlate: number_plate }
 
     })
-    res.json({ success: true, data: response });
+    return response;
+
 
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e;
   }
 }
 
 //delete register
-controller.delete = async (req, res) => {
+controller.delete = async (params) => {
   try {
 
-    const { id } = req.params;
+    const { id } = params;
 
     const response = await Register.destroy({
       where: { id: id }
     })
-    res.json({ success: true, data: response });
 
+    return response
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 //update registers
-controller.update = async (req, res) => {
-
+controller.update = async (params) => {
   try {
 
-    const { number_plate, vehicle_type, entered_at, exited_at, pay } = req.body;
+    const { number_plate, vehicle_type, entered_at, exited_at, pay } = params;
 
     const response = await Register.update({
       numberPlate: number_plate,
@@ -275,11 +249,10 @@ controller.update = async (req, res) => {
     }, {
       where: { numberPlate: number_plate }
     })
-    res.json({ success: true, data: response });
-
+    return response
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 

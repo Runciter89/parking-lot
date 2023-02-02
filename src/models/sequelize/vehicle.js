@@ -1,10 +1,9 @@
-var Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize');
 // importing connection database
-var sequelize = require('../data-access/database');
-const { VEHICLE_TYPE } = require('../shared/constants').enums
+var db = require('../../database/sequelize');
+const { VEHICLE_TYPE } = require('../../shared/constants').enums
 
-const { DataTypes } = Sequelize;
-var vehicles = sequelize.define('vehicles', {
+var vehicles = db.define('vehicles', {
 	numberPlate: {
 		type: DataTypes.STRING,
 		primaryKey: true,

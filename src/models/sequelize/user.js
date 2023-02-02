@@ -1,9 +1,8 @@
-var Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize');
 // importing connection database
-var sequelize = require('../data-access/database');
+const db = require('../../database/sequelize');
 
-const { DataTypes } = Sequelize;
-var users = sequelize.define('users', {
+const users = db.define('users', {
 	name: {
 		type: DataTypes.STRING,
 		//primaryKey: true,

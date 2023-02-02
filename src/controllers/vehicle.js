@@ -1,104 +1,89 @@
 const vehicle = {}
 //imports
-var Vehicles = require('../models/Vehicles');
+const { Vehicle } = require('../models').sequelizeModels;
 const { VEHICLE_TYPE } = require('../shared/constants').enums
-
 
 async function createVehicle(data) {
   const { number_plate, vehicle_type } = data;
-  return Vehicles.create({
+  return Vehicle.create({
     numberPlate: number_plate,
     vehicle_type,
   })
 }
 
-//create official
-vehicle.create_official = async (req, res) => {
+vehicle.createOfficial = async (data) => {
   try {
-    const response = await createVehicle({
-      ...req.body,
+    const result = await createVehicle({
+      data,
       vehicle_type: VEHICLE_TYPE.OFFICIAL,
     })
-    res.json({ success: true, data: response });
+    return result
 
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
 //create resident
-vehicle.create_resident = async (req, res) => {
+vehicle.createResident = async (data) => {
 
   try {
-    const response = await createVehicle({
-      ...req.body,
+    const result = await createVehicle({
+      ...data,
       vehicle_type: VEHICLE_TYPE.RESIDENT,
     })
-    res.json({ success: true, data: response });
-
+    return result
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
 //vehicle list
-vehicle.list = async (req, res) => {
+vehicle.list = async () => {
   try {
-    const response = await Vehicles.findAll({
-
-
-    })
-    res.json({ success: true, data: response });
-
+    const result = await Vehicle.findAll()
+    return result
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
 //get vehicle by numberPlate
-vehicle.get = async (req, res) => {
+vehicle.get = async (number_plate) => {
   try {
-    const { number_plate } = req.params;
-
-    const response = await Vehicles.findOne({
+    const result = await Vehicle.findOne({
       where: { numberPlate: number_plate }
 
     })
-    res.json({ success: true, data: response });
-
+    return result
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 
 //delete vehicle
-vehicle.delete = async (req, res) => {
+vehicle.delete = async (number_plate) => {
   try {
-
-    const { number_plate } = req.params;
-
-    const response = await Vehicles.destroy({
+    const result = await Vehicle.destroy({
       where: { numberPlate: number_plate }
     })
-    res.json({ success: true, data: response });
-
+    return result
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 //update vehicle
-vehicle.update = async (req, res) => {
+vehicle.update = async (number_plate, data) => {
 
   try {
+    const { vehicle_type, monthly } = data;
 
-    const { number_plate, vehicle_type, monthly } = req.body;
-
-    const response = await Vehicles.update({
+    const result = await Vehicle.update({
       numberPlate: number_plate,
       vehicle_type: vehicle_type,
       monthly: monthly
@@ -106,11 +91,10 @@ vehicle.update = async (req, res) => {
     }, {
       where: { numberPlate: number_plate }
     })
-    res.json({ success: true, data: response });
-
+    return result
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 

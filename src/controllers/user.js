@@ -1,133 +1,60 @@
-const user = {}
+const controller = {}
 
 //imports
-var Users = require('../models/Users');
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { User } = require('../models').sequelizeModels;
 
-
-
-//singup
-user.singup = async (req, res) => {
+controller.list = async () => {
   try {
-    let { name, email, password } = req.body;
-
-    const existinUser = await Users.findOne({
-      where: { email: email }
-    })
-    console.log(existinUser)
-    if (existinUser) {
-      return res.status(400).json({ messaje: "User Alredy Exist" });
-
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const response = await Users.create({
-      name: name,
-      password: hashedPassword,
-      email: email
-    });
-
-    const token = jwt.sign({ Id: response.id, email: response.email },
-      process.env.API_SECRET,
-      { expiresIn: process.env.JWT_EXPIRATION }
-    );
-    res.status(201).json({ user: response, token: token });
-
-  }
-  catch (e) {
-    console.log(e);
-    res.json({ success: false, error: e });
-  }
-}
-
-//login
-user.login = async (req, res) => {
-  try {
-    let { email, password } = req.body;
-
-    const existinUser = await Users.findOne({
-      where: { email: email }
-    })
-
-    if (!existinUser) {
-      return res.status(404).json({ messaje: "User Not Found" });
-
-    }
-
-    const matchPassword = await bcrypt.compare(password, existinUser.password);
-    if (!matchPassword) {
-      return res.status(400).json({ messaje: "Wrong Password" });
-    }
-    const token = jwt.sign({ Id: existinUser.id, email: existinUser.email },
-      process.env.API_SECRET,
-      { expiresIn: process.env.JWT_EXPIRATION }
-    );
-    res.status(201).json({ user: existinUser, token: token });
-
-  }
-  catch (e) {
-    console.log(e);
-    res.json({ success: false, error: e });
-  }
-}
-
-//users list
-user.list = async (req, res) => {
-  try {
-    const response = await Users.findAll({
-
-
-    })
-    res.json({ success: true, data: response });
-
+    const response = await User.findAll()
+    return response;
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e;
   }
 }
 
 //get user by id
-user.get = async (req, res) => {
+controller.get = async (params) => {
   try {
-    const { id } = req.params;
+    const { id } = params;
 
-    const response = await Users.findOne({
+    const response = await User.findOne({
       where: { id: id }
 
     })
-    res.json({ success: true, data: response });
+    return response
 
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e;
   }
 }
 
 //delete user
-user.delete = async (req, res) => {
+controller.delete = async (params) => {
   try {
 
-    const { id } = req.params;
+    const { id } = params;
 
-    const response = await Users.destroy({
+    const response = await User.destroy({
       where: { id: id }
     })
-    res.json({ success: true, data: response });
+    return response;
 
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e;
   }
 }
 
 //update user
-user.update = async (req, res) => {
+controller.update = async (params) => {
 
   try {
 
-    const { id, name, email, password } = req.body;
+    const { id, name, email, password } = params;
 
-    const response = await Users.update({
+    const response = await User.update({
       name: name,
       email: email,
       password: password
@@ -135,15 +62,14 @@ user.update = async (req, res) => {
     }, {
       where: { id: id }
     })
-    res.json({ success: true, data: response });
-
+    return response;
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e;
   }
 }
 
 
 
 
-module.exports = user;
+module.exports = controller;

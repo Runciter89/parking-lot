@@ -1,21 +1,19 @@
 const controller = {}
 
 //imports
-var Vehicles = require('../models/Vehicles');
-var Register = require('../models/ParkingLot');
+var { Vehicle } = require('../models').sequelizeModels;
 const { VEHICLE_TYPE } = require('../shared/constants').enums
 var fs = require('fs');
 
-controller.makResidentReport = async (req, res) => {
+controller.makResidentReport = async (param) => {
   let data = null;
   let tax = null;
 
   try {
-    const { fileName } = req.body;
+    const { fileName } = param;
 
-    const response = await Vehicles.findAll({
+    const response = await Vehicle.findAll({
       where: { vehicle_type: VEHICLE_TYPE.RESIDENT }
-
     })
 
     response.forEach(vehicle => {
@@ -28,16 +26,12 @@ controller.makResidentReport = async (req, res) => {
         }
         console.log("file updated")
       });
-
     })
 
-
-
-    res.json({ success: true, data: response });
-
+    return response
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    throw e
   }
 }
 

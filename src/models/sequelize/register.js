@@ -1,10 +1,9 @@
-var Sequelize = require('sequelize');
+const { DataTypes, literal } = require('sequelize');
 // importing connection database
-var sequelize = require('../data-access/database');
-const { VEHICLE_TYPE } = require('../shared/constants').enums
+const db = require('../../database/sequelize');
+const { VEHICLE_TYPE } = require('../../shared/constants').enums
 
-const { DataTypes } = Sequelize;
-var register = sequelize.define('register', {
+const register = db.define('register', {
 	numberPlate: {
 		type: DataTypes.STRING,
 		allowNull: false,
@@ -16,11 +15,11 @@ var register = sequelize.define('register', {
 	},
 	entered_at: {
 		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		defaultValue: literal('CURRENT_TIMESTAMP'),
 	},
 	exited_at: {
 		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		defaultValue: literal('CURRENT_TIMESTAMP'),
 		allowNull: true
 	},
 	pay: {
