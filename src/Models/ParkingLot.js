@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 // importing connection database
-var sequelize = require('../Config/database');
+var sequelize = require('../data-access/database');
 const { VEHICLE_TYPE } = require('../shared/constants').enums
 
 const { DataTypes } = Sequelize;

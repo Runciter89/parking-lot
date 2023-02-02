@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 // importing connection database
-var sequelize = require('../Config/database');
+var sequelize = require('../data-access/database');
 
 const { DataTypes } = Sequelize;
 var users = sequelize.define('users', {
@@ -9,26 +9,26 @@ var users = sequelize.define('users', {
 		//primaryKey: true,
 		allowNull: false,
 	},
-	
-    password: {
+
+	password: {
 		type: DataTypes.STRING,
 		//primaryKey: true,
 		allowNull: false,
 	},
 
-    email: {
+	email: {
 		type: DataTypes.STRING,
 		//primaryKey: true,
 		allowNull: false,
 	},
 
-   
+
 },
 	{
 		timestamps: true
 
 	});
 
-    
+
 
 module.exports = users;
