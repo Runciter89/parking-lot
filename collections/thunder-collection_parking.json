@@ -1,7 +1,7 @@
 {
   "client": "Thunder Client",
   "collectionName": "parking",
-  "dateExported": "2023-02-02T17:15:38.423Z",
+  "dateExported": "2023-02-02T20:13:13.790Z",
   "version": "1.1",
   "folders": [
     {
@@ -149,12 +149,12 @@
       "method": "POST",
       "sortNum": 10000,
       "created": "2023-01-26T01:58:20.941Z",
-      "modified": "2023-02-02T14:51:04.407Z",
+      "modified": "2023-02-02T20:09:11.359Z",
       "headers": [],
       "params": [],
       "body": {
         "type": "json",
-        "raw": "{\n  \"number_plate\": \"QW234599o\"\n}",
+        "raw": "{\n  \"number_plate\": \"QW2345999\"\n}",
         "form": []
       },
       "tests": []
@@ -164,19 +164,38 @@
       "colId": "bf47a234-275c-402c-80d1-2ab05dc6f68c",
       "containerId": "60fb1c34-e91a-4e06-a0b0-df808e8b6df5",
       "name": "generate-monthtly-report",
-      "url": "{{host}}:{{port}}/{{prefix}}/report/resident?fileName=test3",
+      "url": "{{host}}:{{port}}/{{prefix}}/report/resident?fileName=test8",
       "method": "GET",
       "sortNum": 10000,
       "created": "2023-01-26T02:02:53.531Z",
-      "modified": "2023-02-02T17:14:40.300Z",
+      "modified": "2023-02-02T17:44:58.752Z",
       "headers": [],
       "params": [
         {
           "name": "fileName",
-          "value": "test3",
+          "value": "test8",
           "isPath": false
         }
       ],
+      "tests": []
+    },
+    {
+      "_id": "fe2a9c5b-9add-4644-8894-d9a743712bb0",
+      "colId": "bf47a234-275c-402c-80d1-2ab05dc6f68c",
+      "containerId": "f95c6898-f101-4830-a874-d49ffd0cd6c1",
+      "name": "exit",
+      "url": "{{host}}:{{port}}/{{prefix}}/register/exit",
+      "method": "PUT",
+      "sortNum": 12500,
+      "created": "2023-01-26T01:59:38.522Z",
+      "modified": "2023-02-02T19:52:10.819Z",
+      "headers": [],
+      "params": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"number_plate\": \"QW2345999x\"\n}",
+        "form": []
+      },
       "tests": []
     },
     {
@@ -184,11 +203,11 @@
       "colId": "bf47a234-275c-402c-80d1-2ab05dc6f68c",
       "containerId": "f95c6898-f101-4830-a874-d49ffd0cd6c1",
       "name": "start-month",
-      "url": "{{host}}:{{port}}",
+      "url": "{{host}}:{{port}}/{{prefix}}/register/start_month",
       "method": "PUT",
       "sortNum": 15000,
       "created": "2023-01-26T02:02:10.721Z",
-      "modified": "2023-02-02T14:50:05.292Z",
+      "modified": "2023-02-02T19:55:04.734Z",
       "headers": [],
       "params": [],
       "tests": []
@@ -203,20 +222,6 @@
       "sortNum": 15000,
       "created": "2023-02-02T15:04:36.624Z",
       "modified": "2023-02-02T15:11:36.766Z",
-      "headers": [],
-      "params": [],
-      "tests": []
-    },
-    {
-      "_id": "fe2a9c5b-9add-4644-8894-d9a743712bb0",
-      "colId": "bf47a234-275c-402c-80d1-2ab05dc6f68c",
-      "containerId": "f95c6898-f101-4830-a874-d49ffd0cd6c1",
-      "name": "register-out",
-      "url": "{{host}}:{{port}}",
-      "method": "POST",
-      "sortNum": 20000,
-      "created": "2023-01-26T01:59:38.522Z",
-      "modified": "2023-02-02T14:49:59.299Z",
       "headers": [],
       "params": [],
       "tests": []
