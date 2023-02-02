@@ -3,12 +3,7 @@ const handler = {}
 //imports
 const controller = require('../controllers/registry')
 
-/**
- * esta funcion hace una cosa rara
- * @paesram {*} req 
- * @param {*} res 
- * @returns 
- */
+
 handler.handleCreateEntry = async (req, res) => {
   try {
     const result = await controller.createEntry(req.body)
@@ -19,11 +14,6 @@ handler.handleCreateEntry = async (req, res) => {
   }
 }
 
-/**
- * 
- * @param {*} req 
- * @param {*} res 
- */
 handler.startMonth = async (req, res) => {
   try {
     const result = await controller.startMonth()
