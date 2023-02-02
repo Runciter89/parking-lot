@@ -1,0 +1,20 @@
+{
+  "client": "Thunder Client",
+  "environmentName": "parking-dev",
+  "dateExported": "2023-02-02T15:22:15.124Z",
+  "version": "1.0",
+  "variables": [
+    {
+      "name": "host",
+      "value": "localhost"
+    },
+    {
+      "name": "port",
+      "value": "3000"
+    },
+    {
+      "name": "prefix",
+      "value": "parking"
+    }
+  ]
+}
