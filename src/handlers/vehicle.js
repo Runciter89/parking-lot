@@ -44,6 +44,9 @@ handler.get = async (req, res) => {
     const { number_plate } = req.params;
 
     const result = await controller.get(number_plate)
+    if (!result) {
+      res.status(404).body({ success: true, data: result });
+    }
     res.json({ success: true, data: result });
 
   } catch (e) {
@@ -71,9 +74,7 @@ handler.update = async (req, res) => {
 
   try {
     const { number_plate } = req.params;
-    const { vehicle_type, monthly } = req.body;
-
-    const result = await controller.update(number_plate, { vehicle_type, monthly })
+    const result = await controller.update(number_plate, req.body)
     res.json({ success: true, data: result });
 
   } catch (e) {

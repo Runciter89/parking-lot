@@ -3,32 +3,42 @@ const controller = {}
 var { User } = require('../models').sequelizeModels;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Debugger = require('debug')
 
-controller.singup = async (params) => {
+const debug = Debugger('api:controller:auth')
+
+controller.signup = async (params) => {
   try {
+    debug('params', params)
     let { name, email, password } = params;
 
     const existinUser = await User.findOne({
       where: { email: email }
     })
-    console.log(existinUser)
+    debug('existinUser', existinUser)
     if (existinUser) {
       console.log("User Alredy Exist")
       throw new Error("User Alredy Exist")
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    debug('hashedPassword', hashedPassword)
+
     const result = await User.create({
       name: name,
       password: hashedPassword,
       email: email
     });
 
+    debug('createdUser', result)
+
+
     const token = jwt.sign({ Id: result.id, email: result.email },
       process.env.API_SECRET,
       { expiresIn: process.env.JWT_EXPIRATION }
     );
-    return { user: result, token: token };
+    delete result.dataValues.password
+    return { user: result, token };
   }
   catch (e) {
     console.log(e);
@@ -36,8 +46,7 @@ controller.singup = async (params) => {
   }
 }
 
-//login
-controller.login = async (params) => {
+controller.signin = async (params) => {
   try {
     let { email, password } = params;
 
@@ -59,6 +68,7 @@ controller.login = async (params) => {
       process.env.API_SECRET,
       { expiresIn: process.env.JWT_EXPIRATION }
     );
+    delete existinUser.dataValues.password
     return { user: existinUser, token: token };
   }
   catch (e) {

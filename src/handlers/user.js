@@ -6,7 +6,8 @@ const controller = require('../controllers/user')
 //users list
 handler.list = async (req, res) => {
   try {
-    const response = await controller.findAll()
+    const response = await controller.list()
+    response.forEach(user => { delete user.dataValues.password })
     res.json({ success: true, data: response });
   } catch (e) {
     console.log(e);
@@ -20,6 +21,8 @@ handler.get = async (req, res) => {
     const { id } = req.params;
 
     const response = await controller.get(id)
+
+    delete response.dataValues.password
     res.json({ success: true, data: response });
 
   } catch (e) {
@@ -47,8 +50,8 @@ handler.delete = async (req, res) => {
 handler.update = async (req, res) => {
 
   try {
-
-    const response = await controller.update(req.body)
+    const { id } = req.params
+    const response = await controller.update(id, req.body)
     res.json({ success: true, data: response });
 
   } catch (e) {

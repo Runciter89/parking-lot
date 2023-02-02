@@ -2,8 +2,10 @@ const vehicle = {}
 //imports
 const { Vehicle } = require('../models').sequelizeModels;
 const { VEHICLE_TYPE } = require('../shared/constants').enums
+const debug = require('debug')('api:controller:vehicle')
 
 async function createVehicle(data) {
+  debug('createVehicle', data)
   const { number_plate, vehicle_type } = data;
   return Vehicle.create({
     numberPlate: number_plate,
@@ -13,8 +15,9 @@ async function createVehicle(data) {
 
 vehicle.createOfficial = async (data) => {
   try {
+    debug('createOfficial', data)
     const result = await createVehicle({
-      data,
+      ...data,
       vehicle_type: VEHICLE_TYPE.OFFICIAL,
     })
     return result
@@ -81,13 +84,10 @@ vehicle.delete = async (number_plate) => {
 vehicle.update = async (number_plate, data) => {
 
   try {
-    const { vehicle_type, monthly } = data;
+    const { vehicle_type } = data;
 
     const result = await Vehicle.update({
-      numberPlate: number_plate,
       vehicle_type: vehicle_type,
-      monthly: monthly
-
     }, {
       where: { numberPlate: number_plate }
     })

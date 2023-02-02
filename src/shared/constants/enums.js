@@ -9,7 +9,13 @@ const DB_PROVIDER = {
   POSTGRES: 'postgres'
 }
 
+const STAY_TAXES = {
+  [VEHICLE_TYPE.RESIDENT]: 0.05,
+  [VEHICLE_TYPE.NON_RESIDENT]: 0.5
+}
+
 module.exports = {
   VEHICLE_TYPE,
-  DB_PROVIDER
+  DB_PROVIDER,
+  STAY_TAXES
 }

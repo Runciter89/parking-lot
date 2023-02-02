@@ -40,7 +40,7 @@ handler.handleCreateExit = async (req, res) => {
     res.json({ success: true, data: result });
   } catch (e) {
     console.log(e);
-    res.json({ success: false, error: e });
+    res.json({ success: false, error: e.message });
   }
 }
 
@@ -77,45 +77,45 @@ handler.findOne = async (req, res) => {
 }
 
 //delete register
-handler.delete = async (req, res) => {
-  try {
+// handler.delete = async (req, res) => {
+//   try {
 
-    const { id } = req.params;
+//     const { id } = req.params;
 
-    const result = await controller.delete(id)
+//     const result = await controller.delete(id)
 
-    return result
+//     return result
 
 
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-}
-//update registers
-handler.update = async (req, res) => {
+//   } catch (e) {
+//     console.log(e);
+//     throw e;
+//   }
+// }
+// //update registers
+// handler.update = async (req, res) => {
 
-  try {
+//   try {
 
-    const { number_plate, vehicle_type, entered_at, exited_at, pay } = req.body;
+//     const { number_plate, vehicle_type, entered_at, exited_at, pay } = req.body;
 
-    const result = await controller.update({
-      numberPlate: number_plate,
-      vehicle_type: vehicle_type,
-      entered_at: entered_at,
-      exited_at: exited_at,
-      pay: pay
+//     const result = await controller.update({
+//       numberPlate: number_plate,
+//       vehicle_type: vehicle_type,
+//       entered_at: entered_at,
+//       exited_at: exited_at,
+//       pay: pay
 
-    }, {
-      where: { numberPlate: number_plate }
-    })
-    res.json({ success: true, data: result });
+//     }, {
+//       where: { numberPlate: number_plate }
+//     })
+//     res.json({ success: true, data: result });
 
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
-}
+//   } catch (e) {
+//     console.log(e);
+//     throw e;
+//   }
+// }
 
 
 module.exports = handler;

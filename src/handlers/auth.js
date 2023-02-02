@@ -2,10 +2,11 @@ const handler = {};
 
 const controller = require('../controllers/auth')
 
-handler.singup = async (req, res) => {
+handler.signup = async (req, res) => {
   try {
-    const result = await controller.singup(req.body)
-    res.status(201).json({ user: result, token: token });
+    console.log('req', req.body)
+    const result = await controller.signup(req.body)
+    res.status(201).json({ success: true, result });
   }
   catch (e) {
     console.log(e);
@@ -13,10 +14,10 @@ handler.singup = async (req, res) => {
   }
 }
 
-handler.login = async (req, res) => {
+handler.signin = async (req, res) => {
   try {
-    const result = await controller.login(req.body)
-    res.status(200).json({ user: result, token: token });
+    const result = await controller.signin(req.body)
+    res.status(200).json({ success: true, result });
   }
   catch (e) {
     console.log(e);

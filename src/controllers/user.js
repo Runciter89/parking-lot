@@ -14,10 +14,8 @@ controller.list = async () => {
 }
 
 //get user by id
-controller.get = async (params) => {
+controller.get = async (id) => {
   try {
-    const { id } = params;
-
     const response = await User.findOne({
       where: { id: id }
 
@@ -31,11 +29,8 @@ controller.get = async (params) => {
 }
 
 //delete user
-controller.delete = async (params) => {
+controller.delete = async (id) => {
   try {
-
-    const { id } = params;
-
     const response = await User.destroy({
       where: { id: id }
     })
@@ -48,17 +43,14 @@ controller.delete = async (params) => {
 }
 
 //update user
-controller.update = async (params) => {
+controller.update = async (id, data) => {
 
   try {
 
-    const { id, name, email, password } = params;
+    const { name } = data;
 
     const response = await User.update({
-      name: name,
-      email: email,
-      password: password
-
+      name,
     }, {
       where: { id: id }
     })
