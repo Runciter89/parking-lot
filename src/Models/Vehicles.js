@@ -1,6 +1,7 @@
 var Sequelize = require('sequelize');
 // importing connection database
 var sequelize = require('../Config/database');
+const { VEHICLE_TYPE } = require('../shared/constants').enums
 
 const { DataTypes } = Sequelize;
 var vehicles = sequelize.define('vehicles', {
@@ -10,12 +11,8 @@ var vehicles = sequelize.define('vehicles', {
 		allowNull: false,
 	},
 	vehicle_type: {
-		type: DataTypes.ENUM([
-			'RESIDENT',
-			'NON_RESIDENT',
-			'OFFICIAL'
-		]),
-		defaultValue: 'NON_RESIDENT',
+		type: DataTypes.ENUM(Object.keys(VEHICLE_TYPE).map(k => VEHICLE_TYPE[k])),
+		defaultValue: VEHICLE_TYPE.NON_RESIDENT,
 		allowNull: false
 	},
 

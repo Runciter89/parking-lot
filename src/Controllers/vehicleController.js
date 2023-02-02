@@ -1,16 +1,7 @@
 const vehicle = {}
-
-const VEHICLE_TYPE = {
-  OFFICIAL: 'OFFICIAL',
-  RESIDENT: 'RESIDENT',
-  NON_RESIDENT: 'NON_RESIDENT'
-
-}
-
 //imports
 var Vehicles = require('../Models/Vehicles');
-
-
+const { VEHICLE_TYPE } = require('../shared/constants').enums
 
 
 async function createVehicle(data) {
@@ -55,35 +46,35 @@ vehicle.create_resident = async (req, res) => {
 //vehicle list
 vehicle.list = async (req, res) => {
   try {
-      const response = await Vehicles.findAll({
-       
-  
-      })
-      res.json({ success: true, data: response });
-  
-    } catch (e) {
-      console.log(e);
-      res.json({ success: false, error: e });
-    }
+    const response = await Vehicles.findAll({
+
+
+    })
+    res.json({ success: true, data: response });
+
+  } catch (e) {
+    console.log(e);
+    res.json({ success: false, error: e });
   }
- 
-  //get vehicle by numberPlate
-  vehicle.get = async (req, res) => {
-      try {
-        const { number_plate } = req.params;
-    
-        const response = await Vehicles.findOne({
-          where: { numberPlate: number_plate }
-    
-        })
-        res.json({ success: true, data: response });
-    
-      } catch (e) {
-        console.log(e);
-        res.json({ success: false, error: e });
-      }
-    }
-    
+}
+
+//get vehicle by numberPlate
+vehicle.get = async (req, res) => {
+  try {
+    const { number_plate } = req.params;
+
+    const response = await Vehicles.findOne({
+      where: { numberPlate: number_plate }
+
+    })
+    res.json({ success: true, data: response });
+
+  } catch (e) {
+    console.log(e);
+    res.json({ success: false, error: e });
+  }
+}
+
 //delete vehicle
 vehicle.delete = async (req, res) => {
   try {
@@ -105,13 +96,13 @@ vehicle.update = async (req, res) => {
 
   try {
 
-    const {number_plate, vehicle_type, monthly} = req.body;
+    const { number_plate, vehicle_type, monthly } = req.body;
 
     const response = await Vehicles.update({
       numberPlate: number_plate,
       vehicle_type: vehicle_type,
       monthly: monthly
-     
+
     }, {
       where: { numberPlate: number_plate }
     })

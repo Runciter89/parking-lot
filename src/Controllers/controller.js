@@ -1,15 +1,9 @@
 const controller = {}
 
-const VEHICLE_TYPE = {
-  OFFICIAL: 'OFFICIAL',
-  RESIDENT: 'RESIDENT',
-  NON_RESIDENT: 'NON_RESIDENT'
-
-}
-
 //imports
 var Vehicles = require('../Models/Vehicles');
 var Register = require('../Models/ParkingLot');
+const { VEHICLE_TYPE } = require('../shared/constants').enums
 var fs = require('fs');
 
 //register
@@ -58,26 +52,26 @@ controller.register = async (req, res) => {
   }
 }
 
- //comienza mes
+//comienza mes
 controller.startMonth = async (req, res) => {
   try {
     const response = await Register.findAll({})
-    
+
     response.forEach(vehicle => {
-      
+
       switch (vehicle.vehicle_type) {
         case VEHICLE_TYPE.RESIDENT:
           console.log(VEHICLE_TYPE.RESIDENT)
           console.log("PLACA", vehicle.numberPlate)
-        Vehicles.update({ monthly: 0 }, { where: { numberPlate: vehicle.numberPlate } })   
-         break;
+          Vehicles.update({ monthly: 0 }, { where: { numberPlate: vehicle.numberPlate } })
+          break;
         case 'OFFICIAL':
           console.log("OFFICIAL")
           console.log("PLACA", vehicle.numberPlate)
           Register.destroy({ where: { numberPlate: vehicle.numberPlate } })
           break;
         default:
-          
+
           console.log("NONRESIDENT")
 
           break;
@@ -95,74 +89,74 @@ controller.startMonth = async (req, res) => {
 async function resident(data) {
   try {
     const { id } = data;
-    
+
     let tminutes = null
     let sum = null
     let hours = null
 
-    
-    const result = await Register.findOne({
-     where: { id: id} 
-   }) 
 
-   const vehicle = await Vehicles.findOne({ where: { numberPlate: result.numberPlate } })
-    
+    const result = await Register.findOne({
+      where: { id: id }
+    })
+
+    const vehicle = await Vehicles.findOne({ where: { numberPlate: result.numberPlate } })
+
 
     hours = result.exited_at.getHours() - result.entered_at.getHours()
-    hours = hours*60
+    hours = hours * 60
     sum = result.exited_at.getMinutes() - result.entered_at.getMinutes()
     tminutes = hours + sum + vehicle.monthly
-    
-    console.log(" horas",hours)
-    console.log("MINUTOS",sum)
-    console.log("MINUTOS saved",vehicle.monthly)
-    console.log("FINAL MINUTOS",tminutes)
 
-    const response =  await Vehicles.update({ monthly: tminutes }, { where: { numberPlate: result.numberPlate } })
-     
+    console.log(" horas", hours)
+    console.log("MINUTOS", sum)
+    console.log("MINUTOS saved", vehicle.monthly)
+    console.log("FINAL MINUTOS", tminutes)
+
+    const response = await Vehicles.update({ monthly: tminutes }, { where: { numberPlate: result.numberPlate } })
+
     return response
-      res.json({ success: true, data: response });
+    res.json({ success: true, data: response });
 
   } catch (e) {
     console.log(e);
     res.json({ success: false, error: e });
-  } 
-    
+  }
+
 }
 
 async function nonresident(data) {
   try {
     const { id } = data;
-    
+
     let tminutes = null
     let sum = null
     let hours = null
 
-    
+
     const result = await Register.findOne({
-     where: { id: id} 
-   }) 
+      where: { id: id }
+    })
 
     hours = result.exited_at.getHours() - result.entered_at.getHours()
-    hours = hours*60
+    hours = hours * 60
     sum = result.exited_at.getMinutes() - result.entered_at.getMinutes()
-    tminutes = hours + sum 
-    tminutes = tminutes*0.5
+    tminutes = hours + sum
+    tminutes = tminutes * 0.5
 
-    console.log(" horas",hours)
-    console.log("MINUTOS",sum)
-    console.log("FINAL MINUTOS",tminutes)
+    console.log(" horas", hours)
+    console.log("MINUTOS", sum)
+    console.log("FINAL MINUTOS", tminutes)
 
-    const response =  await Register.update({ pay: tminutes }, { where: { id: id } })
-     
+    const response = await Register.update({ pay: tminutes }, { where: { id: id } })
+
     return response
-      res.json({ success: true, data: response });
+    res.json({ success: true, data: response });
 
   } catch (e) {
     console.log(e);
     res.json({ success: false, error: e });
-  } 
-    
+  }
+
 }
 
 
@@ -172,8 +166,8 @@ controller.registerExit = async (req, res) => {
     const { number_plate } = req.body;
 
     const result = await Register.findOne({
-      where: { numberPlate: number_plate, exited_at: "null"} 
-    }) 
+      where: { numberPlate: number_plate, exited_at: "null" }
+    })
     console.log(result.numberPlate)
     const id = result.id
     await Register.update({ exited_at: new Date() }, { where: { numberPlate: result.numberPlate } })
@@ -182,13 +176,13 @@ controller.registerExit = async (req, res) => {
       case VEHICLE_TYPE.RESIDENT:
         console.log(VEHICLE_TYPE.RESIDENT)
         console.log("PLACA", result.numberPlate)
-        await resident({id})
+        await resident({ id })
 
-       break;
+        break;
       case VEHICLE_TYPE.NON_RESIDENT:
-        console.log("NONRESIDENT")
+        console.log(VEHICLE_TYPE.NON_RESIDENT)
         console.log("PLACA", result.numberPlate)
-         await nonresident({id})
+        await nonresident({ id })
         break;
       default:
         console.log("OFFICIAL")
@@ -207,26 +201,26 @@ controller.registerExit = async (req, res) => {
 controller.pago = async (req, res) => {
   let data = null;
   let tax = null;
-  
+
   try {
     const { fileName } = req.body;
-    
+
     const response = await Vehicles.findAll({
       where: { vehicle_type: VEHICLE_TYPE.RESIDENT }
 
     })
-    
+
     response.forEach(vehicle => {
-      tax = vehicle.monthly*0.05;
-      data = [vehicle.numberPlate,vehicle.monthly,tax]
-      
+      tax = vehicle.monthly * 0.05;
+      data = [vehicle.numberPlate, vehicle.monthly, tax]
+
       fs.appendFile(`src/Files/${fileName}`, data.toString(), (err) => {
         if (err) {
           throw err;
         }
         console.log("file updated")
-        } );
-      
+      });
+
     })
 
 
@@ -242,35 +236,35 @@ controller.pago = async (req, res) => {
 //registers list
 controller.list = async (req, res) => {
   try {
-      const response = await Register.findAll({
-       
-  
-      })
-      res.json({ success: true, data: response });
-  
-    } catch (e) {
-      console.log(e);
-      res.json({ success: false, error: e });
-    }
+    const response = await Register.findAll({
+
+
+    })
+    res.json({ success: true, data: response });
+
+  } catch (e) {
+    console.log(e);
+    res.json({ success: false, error: e });
   }
- 
-  //get register by numberPlate
-  controller.get = async (req, res) => {
-      try {
-        const { number_plate } = req.params;
-    
-        const response = await Register.findAll({
-          where: { numberPlate: number_plate }
-    
-        })
-        res.json({ success: true, data: response });
-    
-      } catch (e) {
-        console.log(e);
-        res.json({ success: false, error: e });
-      }
-    }
-    
+}
+
+//get register by numberPlate
+controller.get = async (req, res) => {
+  try {
+    const { number_plate } = req.params;
+
+    const response = await Register.findAll({
+      where: { numberPlate: number_plate }
+
+    })
+    res.json({ success: true, data: response });
+
+  } catch (e) {
+    console.log(e);
+    res.json({ success: false, error: e });
+  }
+}
+
 //delete register
 controller.delete = async (req, res) => {
   try {
@@ -292,12 +286,12 @@ controller.update = async (req, res) => {
 
   try {
 
-    const {number_plate, vehicle_type, entered_at, exited_at, pay} = req.body;
+    const { number_plate, vehicle_type, entered_at, exited_at, pay } = req.body;
 
     const response = await Register.update({
       numberPlate: number_plate,
       vehicle_type: vehicle_type,
-      entered_at:entered_at,
+      entered_at: entered_at,
       exited_at: exited_at,
       pay: pay
 
